@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import androidx.core.app.NotificationCompat
 
 class MainActivity : AppCompatActivity() {

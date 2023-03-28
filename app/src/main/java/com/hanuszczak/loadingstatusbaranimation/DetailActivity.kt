@@ -2,7 +2,6 @@ package com.hanuszczak.loadingstatusbaranimation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.hanuszczak.loadingstatusbaranimation.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
 
