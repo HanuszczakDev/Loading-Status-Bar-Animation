@@ -12,6 +12,10 @@
         android:theme="@style/Theme.LoadingStatusBarAnimation"
         tools:targetApi="31">
         <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail">
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
