@@ -10,6 +10,52 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="@color/imageBackground"
+        android:src="@drawable/baseline_cloud_download_24"
+        app:tint="@color/purple_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/custom_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+        <RadioButton
+            android:id="@+id/glide_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Glide - Image Loading Library by BumpTech"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/load_app_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="LoadApp - Current repository by Udacity"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/retrofit_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Retrofit - Type-safe HTTP client for Android and Java by Square, Inv"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
     <com.hanuszczak.loadingstatusbaranimation.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
@@ -17,7 +63,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="60dp"
         android:layout_margin="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
