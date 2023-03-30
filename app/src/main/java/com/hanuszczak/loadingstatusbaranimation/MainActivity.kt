@@ -15,12 +15,11 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private var downloadID: Long = 0
 
-    private lateinit var customButton: LoadingButton
+    private lateinit var loadingButton: LoadingButton
     private lateinit var radioGroup: RadioGroup
     private lateinit var glideRadio: RadioButton
     private lateinit var loadAppRadio: RadioButton
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        customButton = findViewById(R.id.custom_button)
+        loadingButton = findViewById(R.id.custom_button)
 
         radioGroup = findViewById(R.id.radio_group)
         glideRadio = findViewById(R.id.glide_radio)
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        customButton.setOnClickListener {
+        loadingButton.setOnClickListener {
             if (radioGroup.checkedRadioButtonId == -1) {
                 Toast.makeText(
                     this, getString(R.string.no_radio_group_selected),
