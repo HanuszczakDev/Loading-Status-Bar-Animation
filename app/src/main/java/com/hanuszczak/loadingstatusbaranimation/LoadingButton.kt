@@ -4,6 +4,8 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import kotlin.properties.Delegates
@@ -13,6 +15,9 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var widthSize = 0
     private var heightSize = 0
+    private var progressValue = 0.0F
+
+    private val paint = Paint().apply{}
 
     private val valueAnimator = ValueAnimator()
 
@@ -23,7 +28,7 @@ class LoadingButton @JvmOverloads constructor(
 
 
     init {
-
+        progressValue = 0.0F
     }
 
 
@@ -31,8 +36,20 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         canvas?.let {
             canvas.drawColor(Color.RED)
-        }
 
+            drawRectangle(canvas)
+        }
+    }
+
+    private fun drawRectangle(canvas: Canvas) {
+        val rectDraw = RectF(
+            0F,
+            0F,
+            widthSize.toFloat() * progressValue,
+            heightSize.toFloat())
+
+        paint.color = Color.BLUE
+        canvas.drawRect(rectDraw, paint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
