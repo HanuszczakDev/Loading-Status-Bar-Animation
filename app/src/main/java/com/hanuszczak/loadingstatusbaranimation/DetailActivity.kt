@@ -17,7 +17,7 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         fileNameTextView = findViewById(R.id.repository_name_text_view)
-        statusTextView = findViewById(R.id.status_text_view)
+        statusTextView = findViewById(R.id.download_status_text_view)
         confirmButton = findViewById(R.id.confirm_button)
 
         val notificationManager = getSystemService(NotificationManager::class.java)
