@@ -83,8 +83,17 @@ class MainActivity : AppCompatActivity() {
                     url = URL_RETROFIT
                     radioSelection = RadioSelection.RETROFIT
                 }
+                radioGroup.clearCheck()
+                radioGroup.setChildrenEnabled(false)
+                loadingButton.isEnabled = false
                 download(url)
             }
+        }
+    }
+
+    fun RadioGroup.setChildrenEnabled(enabled: Boolean) {
+        for (i in 0 until childCount) {
+            getChildAt(i).isEnabled = enabled
         }
     }
 
@@ -98,6 +107,8 @@ class MainActivity : AppCompatActivity() {
                 DownloadManager.STATUS_SUCCESSFUL -> "Download Successful"
                 else -> "Download Failed"
             }
+            radioGroup.setChildrenEnabled(true)
+            loadingButton.isEnabled = true
             loadingButton.buttonState = ButtonState.Completed
             downloadedUrl = when (radioSelection) {
                 RadioSelection.GLIDE -> getString(R.string.glide_url)

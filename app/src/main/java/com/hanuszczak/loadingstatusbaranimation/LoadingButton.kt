@@ -48,7 +48,7 @@ class LoadingButton @JvmOverloads constructor(
             ButtonState.Completed -> {
                 valueAnimator.cancel()
                 valueAnimator = ValueAnimator.ofFloat(progressValue, 1F).apply {
-                    duration = 1000L
+                    duration = 100L
                     addUpdateListener {
                         progressValue = it.animatedValue as Float
                         invalidate()
