@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 RadioSelection.RETROFIT -> getString(R.string.retrofit_url)
                 else -> ""
             }
-            prepareAndSendNotification(context)
+            prepareNotification(context)
             sendNotification(
                 getString(R.string.notification_description),
                 context!!
@@ -113,12 +113,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun prepareAndSendNotification(context: Context?) {
+    private fun prepareNotification(context: Context?) {
         val intentToDetailActivity = Intent(context, DetailActivity::class.java)
         intentToDetailActivity.putExtra("downloadedUrl", downloadedUrl)
         intentToDetailActivity.putExtra("downloadStatus", downloadStatus)
         pendingIntent = PendingIntent.getActivity(
-            applicationContext,
+            context,
             NOTIFICATION_ID,
             intentToDetailActivity,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
@@ -130,20 +130,19 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun sendNotification(messageBody: String, applicationContext: Context) {
+    private fun sendNotification(messageBody: String, context: Context) {
         val builder = NotificationCompat.Builder(
-            applicationContext,
+            context,
             getString(R.string.notification_channel_id)
         )
-            .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentTitle(
-                applicationContext
+                context
                     .getString(R.string.notification_title)
             )
+            .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentText(messageBody)
-            .setAutoCancel(true)
-            .addAction(action)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .addAction(action)
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
