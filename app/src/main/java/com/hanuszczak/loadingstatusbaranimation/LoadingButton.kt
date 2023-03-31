@@ -18,17 +18,29 @@ class LoadingButton @JvmOverloads constructor(
     private var progressValue = 0.0F
 
     private val paint = Paint().apply{}
+    private val textPaint = Paint().apply{}
+
+    private var text: String = ""
 
     private val valueAnimator = ValueAnimator()
 
     var buttonState: ButtonState by Delegates.observable<ButtonState>(
         ButtonState.Completed) { p, old, new ->
-
+        when (new) {
+            ButtonState.Clicked -> {}
+            ButtonState.Loading -> {
+                text = "We are loading"
+            }
+            ButtonState.Completed -> {
+                text = "Click to download"
+            }
+        }
     }
 
 
     init {
         progressValue = 0.0F
+        text = "Click to download"
     }
 
 
@@ -36,7 +48,7 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         canvas?.let {
             canvas.drawColor(Color.RED)
-
+            drawText(canvas)
             drawRectangle(canvas)
         }
     }
@@ -50,6 +62,16 @@ class LoadingButton @JvmOverloads constructor(
 
         paint.color = Color.BLUE
         canvas.drawRect(rectDraw, paint)
+    }
+
+    private fun drawText(canvas: Canvas) {
+        textPaint.color = Color.WHITE
+        canvas.drawText(
+            text,
+            widthSize.toFloat() / 2,
+            heightSize.toFloat() / 2,
+            textPaint
+        )
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
