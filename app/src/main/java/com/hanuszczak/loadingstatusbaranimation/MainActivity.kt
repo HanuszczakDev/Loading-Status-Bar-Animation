@@ -31,6 +31,12 @@ class MainActivity : AppCompatActivity() {
 
     private var url: String? = null
 
+    private var radioSelection: RadioSelection? = null
+
+    enum class RadioSelection {
+        GLIDE, LOADAPP, RETROFIT
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         loadingButton.setOnClickListener {
+            loadingButton.buttonState = ButtonState.Clicked
             if (radioGroup.checkedRadioButtonId == -1) {
                 Toast.makeText(
                     this, getString(R.string.no_radio_group_selected),
@@ -53,9 +60,19 @@ class MainActivity : AppCompatActivity() {
                 )
                     .show()
             } else {
-                if (glideRadio.isChecked) url = URL_GLIDE
-                if (loadAppRadio.isChecked) url = URL_UDACITY
-                if (retrofitRadio.isChecked) url = URL_RETROFIT
+                loadingButton.buttonState = ButtonState.Loading
+                if (glideRadio.isChecked) {
+                    url = URL_GLIDE
+                    radioSelection = RadioSelection.GLIDE
+                }
+                if (loadAppRadio.isChecked) {
+                    url = URL_UDACITY
+                    radioSelection = RadioSelection.LOADAPP
+                }
+                if (retrofitRadio.isChecked) {
+                    url = URL_RETROFIT
+                    radioSelection = RadioSelection.RETROFIT
+                }
                 download(url)
             }
         }
@@ -65,6 +82,14 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             Log.d("MainActivity", "downloadId: $id")
+            val status = when (
+                intent?.getIntExtra(DownloadManager.COLUMN_STATUS, -1)
+            ) {
+                DownloadManager.STATUS_SUCCESSFUL -> "Download Successful"
+                else -> "Download Failed"
+            }
+
+            loadingButton.buttonState = ButtonState.Completed
         }
     }
 
