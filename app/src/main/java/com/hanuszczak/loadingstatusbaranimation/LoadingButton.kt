@@ -24,6 +24,7 @@ class LoadingButton @JvmOverloads constructor(
         textSize = context.resources.getDimension(R.dimen.default_text_size)
         textAlign = Paint.Align.CENTER
     }
+    private val circlePaint = Paint().apply{}
 
     private var text: String = ""
 
@@ -36,7 +37,7 @@ class LoadingButton @JvmOverloads constructor(
             ButtonState.Loading -> {
                 text = "We are loading"
                 valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
-                    duration = 3000L
+                    duration = 2500L
                     repeatCount = ValueAnimator.INFINITE
                     addUpdateListener {
                         progressValue = it.animatedValue as Float
@@ -66,12 +67,10 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-
     init {
         progressValue = 0.0F
         text = "Click to download"
     }
-
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -79,6 +78,7 @@ class LoadingButton @JvmOverloads constructor(
             canvas.drawColor(Color.RED)
             drawRectangle(canvas)
             drawText(canvas)
+            drawArc(canvas)
         }
     }
 
@@ -98,8 +98,25 @@ class LoadingButton @JvmOverloads constructor(
         canvas.drawText(
             text,
             widthSize.toFloat() / 2,
-            heightSize.toFloat() / 2,
+            heightSize.toFloat() / 2 + 10,
             textPaint
+        )
+    }
+
+    private fun drawArc(canvas: Canvas) {
+        val circleRadius = resources.getDimension(R.dimen.default_circle_radius)
+        circlePaint.color = Color.GREEN
+        val xPosition = 3 * widthSize.toFloat() / 4
+        val yPosition = heightSize.toFloat() / 2
+        canvas.drawArc(
+            xPosition,
+            yPosition - circleRadius,
+            circleRadius * 2 + xPosition,
+            circleRadius + yPosition,
+            0F,
+            360F * progressValue,
+            true,
+            circlePaint
         )
     }
 
