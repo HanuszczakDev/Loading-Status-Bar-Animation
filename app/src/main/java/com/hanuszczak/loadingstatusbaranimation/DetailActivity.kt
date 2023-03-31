@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.hanuszczak.loadingstatusbaranimation.MainActivity.Companion.INTENT_DOWNLOAD_STATUS
+import com.hanuszczak.loadingstatusbaranimation.MainActivity.Companion.INTENT_DOWNLOAD_URL
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var fileNameTextView: TextView
@@ -23,8 +25,8 @@ class DetailActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.cancelAll()
 
-        fileNameTextView.text = intent.getStringExtra("downloadedUrl")
-        statusTextView.text = intent.getStringExtra("downloadStatus")
+        fileNameTextView.text = intent.getStringExtra(INTENT_DOWNLOAD_URL)
+        statusTextView.text = intent.getStringExtra(INTENT_DOWNLOAD_STATUS)
 
         confirmButton.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }

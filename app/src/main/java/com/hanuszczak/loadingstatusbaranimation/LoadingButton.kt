@@ -35,7 +35,7 @@ class LoadingButton @JvmOverloads constructor(
         when (new) {
             ButtonState.Clicked -> {}
             ButtonState.Loading -> {
-                text = "We are loading"
+                text = resources.getString(R.string.button_loading)
                 valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
                     duration = 2500L
                     repeatCount = ValueAnimator.INFINITE
@@ -56,7 +56,7 @@ class LoadingButton @JvmOverloads constructor(
                     }
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            text = "Click to download"
+                            text = resources.getString(R.string.button_name)
                             progressValue = 0.0F
                             invalidate()
                         }
@@ -69,7 +69,7 @@ class LoadingButton @JvmOverloads constructor(
 
     init {
         progressValue = 0.0F
-        text = "Click to download"
+        text = resources.getString(R.string.button_name)
     }
 
     override fun onDraw(canvas: Canvas?) {

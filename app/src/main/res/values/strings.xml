@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Loading Status Bar Animation</string>
     <string name="app_description">Download files from Internet</string>
     <string name="action_settings">Settings</string>
@@ -8,7 +8,7 @@
     <string name="notification_description">The Project 3 repository is downloaded</string>
     <string name="notification_button">See changes</string>
 
-    <string name="button_name">Click me</string>
+    <string name="button_name">Click to download</string>
     <string name="button_loading">We are loading </string>
     <string name="title_activity_detail">DetailActivity</string>
 
@@ -20,4 +20,8 @@
 
     <string name="notification_channel_id">download_channel</string>
     <string name="notification_channel_name">Github Repository</string>
+    <string name="notification_channel_description">download github repository</string>
+
+    <string name="download_successful">Download Successful</string>
+    <string name="download_failed">Download Failed</string>
 </resources>

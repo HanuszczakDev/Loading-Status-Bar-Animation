@@ -104,8 +104,8 @@ class MainActivity : AppCompatActivity() {
             downloadStatus = when (
                 intent?.getIntExtra(DownloadManager.COLUMN_STATUS, -1)
             ) {
-                DownloadManager.STATUS_SUCCESSFUL -> "Download Successful"
-                else -> "Download Failed"
+                DownloadManager.STATUS_SUCCESSFUL -> getString(R.string.download_successful)
+                else -> getString(R.string.download_failed)
             }
             radioGroup.setChildrenEnabled(true)
             loadingButton.isEnabled = true
@@ -126,8 +126,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun prepareNotification(context: Context?) {
         val intentToDetailActivity = Intent(context, DetailActivity::class.java)
-        intentToDetailActivity.putExtra("downloadedUrl", downloadedUrl)
-        intentToDetailActivity.putExtra("downloadStatus", downloadStatus)
+        intentToDetailActivity.putExtra(INTENT_DOWNLOAD_URL, downloadedUrl)
+        intentToDetailActivity.putExtra(INTENT_DOWNLOAD_STATUS, downloadStatus)
         pendingIntent = PendingIntent.getActivity(
             context,
             NOTIFICATION_ID,
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
-            notificationChannel.description = "download github repository"
+            notificationChannel.description = resources.getString(R.string.notification_channel_description)
 
             notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(notificationChannel)
@@ -193,5 +193,7 @@ class MainActivity : AppCompatActivity() {
         private const val URL_GLIDE = "https://github.com/bumptech/glide/archive/master.zip"
         private const val URL_RETROFIT = "https://github.com/square/retrofit/archive/master.zip"
         private const val NOTIFICATION_ID = 0
+        const val INTENT_DOWNLOAD_URL = "downloadedUrl"
+        const val INTENT_DOWNLOAD_STATUS = "downloadStatus"
     }
 }
