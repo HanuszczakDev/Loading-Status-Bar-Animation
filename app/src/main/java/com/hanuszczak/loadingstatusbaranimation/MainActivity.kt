@@ -1,13 +1,16 @@
 package com.hanuszczak.loadingstatusbaranimation
 
 import android.app.DownloadManager
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -52,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         retrofitRadio = findViewById(R.id.retrofit_radio)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+
+        createChannel(
+            getString(R.string.notification_channel_id),
+            getString(R.string.notification_channel_name)
+        )
 
         loadingButton.setOnClickListener {
             loadingButton.buttonState = ButtonState.Clicked
@@ -98,6 +106,10 @@ class MainActivity : AppCompatActivity() {
                 else -> ""
             }
             prepareAndSendNotification(context)
+            sendNotification(
+                getString(R.string.notification_description),
+                context!!
+            )
         }
     }
 
@@ -116,10 +128,41 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.notification_button),
             pendingIntent
         )
-//        sendNotification(
-//            getString(R.string.notification_description),
-//            context!!
-//        )
+    }
+
+    private fun sendNotification(messageBody: String, applicationContext: Context) {
+        val builder = NotificationCompat.Builder(
+            applicationContext,
+            getString(R.string.notification_channel_id)
+        )
+            .setSmallIcon(R.drawable.ic_assistant_black_24dp)
+            .setContentTitle(
+                applicationContext
+                    .getString(R.string.notification_title)
+            )
+            .setContentText(messageBody)
+            .setAutoCancel(true)
+            .addAction(action)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        notificationManager.notify(NOTIFICATION_ID, builder.build())
+    }
+
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_LOW
+            )
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "download github repository"
+
+            notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 
     private fun download(url: String?) {
@@ -139,7 +182,6 @@ class MainActivity : AppCompatActivity() {
         private const val URL_UDACITY = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val URL_GLIDE = "https://github.com/bumptech/glide/archive/master.zip"
         private const val URL_RETROFIT = "https://github.com/square/retrofit/archive/master.zip"
-        private const val CHANNEL_ID = "channelId"
         private const val NOTIFICATION_ID = 0
     }
 }
