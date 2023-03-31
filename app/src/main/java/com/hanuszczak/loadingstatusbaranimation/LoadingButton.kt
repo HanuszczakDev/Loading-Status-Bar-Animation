@@ -1,5 +1,7 @@
 package com.hanuszczak.loadingstatusbaranimation
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -18,11 +20,14 @@ class LoadingButton @JvmOverloads constructor(
     private var progressValue = 0.0F
 
     private val paint = Paint().apply{}
-    private val textPaint = Paint().apply{}
+    private val textPaint = Paint().apply{
+        textSize = context.resources.getDimension(R.dimen.default_text_size)
+        textAlign = Paint.Align.CENTER
+    }
 
     private var text: String = ""
 
-    private val valueAnimator = ValueAnimator()
+    private var valueAnimator = ValueAnimator()
 
     var buttonState: ButtonState by Delegates.observable<ButtonState>(
         ButtonState.Completed) { p, old, new ->
@@ -30,9 +35,33 @@ class LoadingButton @JvmOverloads constructor(
             ButtonState.Clicked -> {}
             ButtonState.Loading -> {
                 text = "We are loading"
+                valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+                    duration = 3000L
+                    repeatCount = ValueAnimator.INFINITE
+                    addUpdateListener {
+                        progressValue = it.animatedValue as Float
+                        invalidate()
+                    }
+                    start()
+                }
             }
             ButtonState.Completed -> {
-                text = "Click to download"
+                valueAnimator.cancel()
+                valueAnimator = ValueAnimator.ofFloat(progressValue, 1F).apply {
+                    duration = 1000L
+                    addUpdateListener {
+                        progressValue = it.animatedValue as Float
+                        invalidate()
+                    }
+                    addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            text = "Click to download"
+                            progressValue = 0.0F
+                            invalidate()
+                        }
+                    })
+                    start()
+                }
             }
         }
     }
@@ -48,8 +77,8 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         canvas?.let {
             canvas.drawColor(Color.RED)
-            drawText(canvas)
             drawRectangle(canvas)
+            drawText(canvas)
         }
     }
 

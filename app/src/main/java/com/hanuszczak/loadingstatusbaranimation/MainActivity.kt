@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private var url: String? = null
 
     private var radioSelection: RadioSelection? = null
+    private var downloadedUrl: String? = null
+    private var downloadStatus: String? = null
 
     enum class RadioSelection {
         GLIDE, LOADAPP, RETROFIT
@@ -82,15 +84,42 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             Log.d("MainActivity", "downloadId: $id")
-            val status = when (
+            downloadStatus = when (
                 intent?.getIntExtra(DownloadManager.COLUMN_STATUS, -1)
             ) {
                 DownloadManager.STATUS_SUCCESSFUL -> "Download Successful"
                 else -> "Download Failed"
             }
-
             loadingButton.buttonState = ButtonState.Completed
+            downloadedUrl = when (radioSelection) {
+                RadioSelection.GLIDE -> getString(R.string.glide_url)
+                RadioSelection.LOADAPP -> getString(R.string.loadapp_url)
+                RadioSelection.RETROFIT -> getString(R.string.retrofit_url)
+                else -> ""
+            }
+            prepareAndSendNotification(context)
         }
+    }
+
+    private fun prepareAndSendNotification(context: Context?) {
+        val intentToDetailActivity = Intent(context, DetailActivity::class.java)
+        intentToDetailActivity.putExtra("downloadedUrl", downloadedUrl)
+        intentToDetailActivity.putExtra("downloadStatus", downloadStatus)
+        pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            NOTIFICATION_ID,
+            intentToDetailActivity,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+        action = NotificationCompat.Action(
+            R.drawable.ic_assistant_black_24dp,
+            getString(R.string.notification_button),
+            pendingIntent
+        )
+//        sendNotification(
+//            getString(R.string.notification_description),
+//            context!!
+//        )
     }
 
     private fun download(url: String?) {
@@ -111,5 +140,6 @@ class MainActivity : AppCompatActivity() {
         private const val URL_GLIDE = "https://github.com/bumptech/glide/archive/master.zip"
         private const val URL_RETROFIT = "https://github.com/square/retrofit/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
+        private const val NOTIFICATION_ID = 0
     }
 }

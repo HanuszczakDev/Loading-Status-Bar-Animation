@@ -13,4 +13,9 @@
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="no_radio_group_selected">Please choose one option to download</string>
+
+    <string name="glide_url">Glide - Image Loading Library by BumpTech</string>
+    <string name="loadapp_url">LoadApp - Current repository by Udacity</string>
+    <string name="retrofit_url">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
+
 </resources>
