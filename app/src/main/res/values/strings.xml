@@ -8,8 +8,8 @@
     <string name="notification_description">The Project 3 repository is downloaded</string>
     <string name="notification_button">See changes</string>
 
-    <string name="button_name">Click to download</string>
-    <string name="button_loading">We are loading </string>
+    <string name="button_init_name">Click to download</string>
+    <string name="button_loading_name">We are loading</string>
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="no_radio_group_selected">Please choose one option to download</string>

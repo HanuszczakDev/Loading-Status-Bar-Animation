@@ -59,10 +59,15 @@
     <com.hanuszczak.loadingstatusbaranimation.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="60dp"
         android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:loadingButtonColor="@color/loadingButtonColor"
+        app:completeButtonColor="@color/completeButtonColor"
+        app:arcColor="@color/arcColor"
+        app:loadingButtonText="@string/button_loading_name"
+        app:completeButtonText="@string/button_init_name"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

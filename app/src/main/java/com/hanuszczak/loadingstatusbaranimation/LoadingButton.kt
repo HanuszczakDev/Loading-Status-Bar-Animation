@@ -10,6 +10,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.res.TypedArrayUtils.getString
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -26,6 +27,13 @@ class LoadingButton @JvmOverloads constructor(
     }
     private val circlePaint = Paint().apply{}
 
+    private var loadingButtonText: String? = null
+    private var completeButtonText: String? = null
+
+    private var loadingButtonColor: Int = 0
+    private var completeButtonColor: Int = 0
+    private var arcColor: Int = 0
+
     private var text: String = ""
 
     private var valueAnimator = ValueAnimator()
@@ -35,7 +43,7 @@ class LoadingButton @JvmOverloads constructor(
         when (new) {
             ButtonState.Clicked -> {}
             ButtonState.Loading -> {
-                text = resources.getString(R.string.button_loading)
+                text = loadingButtonText!!
                 valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
                     duration = 2500L
                     repeatCount = ValueAnimator.INFINITE
@@ -56,7 +64,7 @@ class LoadingButton @JvmOverloads constructor(
                     }
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
-                            text = resources.getString(R.string.button_name)
+                            text = completeButtonText!!
                             progressValue = 0.0F
                             invalidate()
                         }
@@ -69,13 +77,20 @@ class LoadingButton @JvmOverloads constructor(
 
     init {
         progressValue = 0.0F
-        text = resources.getString(R.string.button_name)
+        context.theme.obtainStyledAttributes(attrs, R.styleable.LoadingButton, 0, 0).apply {
+            loadingButtonText = getString(R.styleable.LoadingButton_loadingButtonText)
+            completeButtonText = getString(R.styleable.LoadingButton_completeButtonText)
+            loadingButtonColor = getColor(R.styleable.LoadingButton_loadingButtonColor, 0)
+            completeButtonColor = getColor(R.styleable.LoadingButton_completeButtonColor, 0)
+            arcColor = getColor(R.styleable.LoadingButton_arcColor, 0)
+        }
+        text = completeButtonText!!
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.let {
-            canvas.drawColor(Color.RED)
+            canvas.drawColor(completeButtonColor)
             drawRectangle(canvas)
             drawText(canvas)
             drawArc(canvas)
@@ -89,7 +104,7 @@ class LoadingButton @JvmOverloads constructor(
             widthSize.toFloat() * progressValue,
             heightSize.toFloat())
 
-        paint.color = Color.BLUE
+        paint.color = loadingButtonColor
         canvas.drawRect(rectDraw, paint)
     }
 
@@ -105,7 +120,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private fun drawArc(canvas: Canvas) {
         val circleRadius = resources.getDimension(R.dimen.default_circle_radius)
-        circlePaint.color = Color.GREEN
+        circlePaint.color = arcColor
         val xPosition = 3 * widthSize.toFloat() / 4
         val yPosition = heightSize.toFloat() / 2
         canvas.drawArc(
