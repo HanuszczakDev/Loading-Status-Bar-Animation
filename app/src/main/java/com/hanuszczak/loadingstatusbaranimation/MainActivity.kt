@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -18,6 +19,12 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     private var downloadID: Long = 0
@@ -31,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
+
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     private var url: String? = null
 
@@ -55,6 +64,19 @@ class MainActivity : AppCompatActivity() {
         retrofitRadio = findViewById(R.id.retrofit_radio)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                sendNotification(
+                    getString(R.string.notification_description),
+                    this
+                )
+            } else {
+                Toast.makeText(this, "no Grants", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         createChannel(
             getString(R.string.notification_channel_id),
@@ -117,10 +139,42 @@ class MainActivity : AppCompatActivity() {
                 else -> ""
             }
             prepareNotification(context)
-            sendNotification(
-                getString(R.string.notification_description),
-                context!!
-            )
+            when {
+                ContextCompat.checkSelfPermission(
+                    context!!,
+                    Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
+                    Log.e("MainActivity", "User accepted the notifications!")
+                    sendNotification(
+                        getString(R.string.notification_description),
+                        context
+                    )
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    Snackbar.make(
+                        findViewById(R.id.main_layout),
+                        "The user denied the notifications ):",
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction("Settings") {
+                            val settingsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            val uri: Uri =
+                                Uri.fromParts(
+                                    "com.hanuszczak.loadingstatusbaranimation",
+                                    packageName,
+                                    null
+                                )
+                            settingsIntent.data = uri
+                            startActivity(settingsIntent)
+                        }
+                        .show()
+                }
+                else -> {
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+            }
         }
     }
 
